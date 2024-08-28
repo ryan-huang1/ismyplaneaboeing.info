@@ -23,7 +23,7 @@ interface FlightInfo {
 
 const checkFlight = async (flightNumber: string): Promise<FlightInfo> => {
   try {
-    const response = await fetch(`http://localhost:5001/flight_info?flight_number=${flightNumber}`);
+    const response = await fetch(`https://monkfish-app-9vrzw.ondigitalocean.app/flight_info?flight_number=${flightNumber}`);
     if (!response.ok) {
       throw new Error('Flight not found');
     }
