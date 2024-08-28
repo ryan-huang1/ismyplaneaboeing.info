@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, CheckCircle, XCircle, Plane, ExternalLink, AlertCircle } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Loader2, CheckCircle, XCircle, Plane, ExternalLink, AlertCircle, Info, Shuffle } from "lucide-react"
 
 interface FlightInfo {
   type: 'Boeing' | 'Not Boeing' | 'Not Found';
@@ -15,14 +15,14 @@ const checkFlight = (flightNumber: string): Promise<FlightInfo> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const random = Math.random()
-      if (random < 0.33) {
+      if (random < 1/3) {
         resolve({ type: 'Boeing', aircraft: ['Boeing 737 MAX', 'Boeing 787 Dreamliner', 'Boeing 777'][Math.floor(Math.random() * 3)] })
-      } else if (random < 0.66) {
+      } else if (random < 2/3) {
         resolve({ type: 'Not Boeing', aircraft: ['Airbus A320', 'Airbus A350', 'Embraer E175'][Math.floor(Math.random() * 3)] })
       } else {
         resolve({ type: 'Not Found' })
       }
-    }, 1500)
+    }, 200)
   })
 }
 
@@ -30,8 +30,15 @@ const simulateOpenPartnerWebsite = (): Promise<void> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve()
-    }, 2000)
+    }, 200)
   })
+}
+
+const generateRandomFlightNumber = (): string => {
+  const airlines = ['AA', 'UA', 'DL', 'WN', 'BA', 'LH', 'AF', 'KL', 'EK', 'QR']
+  const airline = airlines[Math.floor(Math.random() * airlines.length)]
+  const number = Math.floor(Math.random() * 9000) + 1000
+  return `${airline}${number}`
 }
 
 export default function Component() {
@@ -70,108 +77,155 @@ export default function Component() {
     }
   }
 
+  const handleRandomFlight = () => {
+    const randomFlight = generateRandomFlightNumber()
+    setFlightNumber(randomFlight)
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold flex items-center justify-center gap-4 mb-4">
-            <Plane className="h-10 w-10 text-blue-500" />
-            Flight Checker
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#B1D4E5] to-[#E8F1F8] p-4">
+      <Card className="w-full max-w-2xl mx-auto h-[560px] flex flex-col bg-white/90 backdrop-blur-sm border-2 border-white rounded-2xl shadow-[0_10px_20px_rgba(0,0,0,0.1)] transform perspective-1000 hover:rotate-y-1 transition-all duration-300 hover:shadow-[0_20px_30px_rgba(0,0,0,0.2)]">
+        <CardHeader className="text-center py-4 bg-gradient-to-r from-[#4C8CBF] to-[#8CC8E8] text-white rounded-t-xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-white/10"></div>
+          <CardTitle className="text-3xl font-bold flex items-center justify-center gap-3 mb-2 relative z-10">
+            <Plane className="h-10 w-10 text-white transform -rotate-45 drop-shadow-md" />
+            Boeing Flight or Not?
           </CardTitle>
-          <CardDescription className="text-xl">
+          <CardDescription className="text-lg text-white relative z-10 drop-shadow">
             Check if your flight is on a Boeing airplane
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <CardContent className="flex-grow flex flex-col justify-center space-y-6 p-6 overflow-y-auto">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-              <Input
-                type="text"
-                placeholder="Enter flight number"
-                value={flightNumber}
-                onChange={(e) => setFlightNumber(e.target.value)}
-                required
-                className="flex-grow text-lg py-6"
-              />
+              <div className="flex-grow flex space-x-2">
+                <Input
+                  type="text"
+                  placeholder="Enter flight number (e.g., AA1234)"
+                  value={flightNumber}
+                  onChange={(e) => setFlightNumber(e.target.value)}
+                  required
+                  className="flex-grow text-lg py-5 border-2 border-gray-300 rounded-xl shadow-inner"
+                />
+                <Button
+                  type="button"
+                  onClick={handleRandomFlight}
+                  className="px-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl transform transition-all duration-200 hover:scale-105 active:scale-95"
+                  title="Generate random flight number"
+                >
+                  <Shuffle className="h-5 w-5" />
+                </Button>
+              </div>
               <Button 
                 type="submit" 
                 disabled={loading}
-                className="w-full sm:w-auto text-lg py-6 px-8"
+                className="w-full sm:w-auto text-lg py-5 px-6 bg-gradient-to-r from-[#4C8CBF] to-[#8CC8E8] text-white rounded-xl transform transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
               >
-                {loading ? <Loader2 className="h-6 w-6 animate-spin" /> : 'Check Flight'}
+                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Check Flight'}
               </Button>
             </div>
           </form>
-          {result && (
-            <div className={`p-6 rounded-lg ${
-              result.type === 'Boeing' ? 'bg-red-100' : 
-              result.type === 'Not Boeing' ? 'bg-green-100' : 
-              'bg-yellow-100'
-            }`}>
-              <div className="flex flex-row items-center justify-center space-x-4 mb-4">
-                {result.type === 'Boeing' && (
-                  <>
-                    <XCircle className="text-red-500 h-8 w-8 flex-shrink-0" />
-                    <span className="text-red-700 text-2xl font-medium">This is a Boeing aircraft.</span>
-                  </>
-                )}
-                {result.type === 'Not Boeing' && (
-                  <>
-                    <CheckCircle className="text-green-500 h-8 w-8 flex-shrink-0" />
-                    <span className="text-green-700 text-2xl font-medium">This is not a Boeing aircraft.</span>
-                  </>
-                )}
-                {result.type === 'Not Found' && (
-                  <>
-                    <AlertCircle className="text-yellow-500 h-8 w-8 flex-shrink-0" />
-                    <span className="text-yellow-700 text-2xl font-medium">Flight not found. Please check the number.</span>
-                  </>
-                )}
-              </div>
-              {result.aircraft && (
-                <p className={`text-center text-lg ${
-                  result.type === 'Boeing' ? 'text-red-600' : 'text-green-600'
-                }`}>
-                  Aircraft assigned: {result.aircraft}
-                </p>
-              )}
-              {result.type === 'Boeing' && (
-                <div className="mt-6 space-y-4">
-                  <p className="text-gray-700 text-lg text-center">
-                    If you prefer not to fly on a Boeing aircraft, you can explore rebooking options.
-                  </p>
-                  <Button
-                    onClick={handleRebook}
-                    disabled={rebooking || partnerWebsiteOpened}
-                    className="w-full bg-blue-500 hover:bg-blue-600 text-white text-lg py-6"
-                  >
-                    {rebooking ? (
+          <div className="flex-grow flex items-center justify-center">
+            {result ? (
+              <div className={`w-full p-6 rounded-xl shadow-lg transform transition-all duration-300 ${
+                result.type === 'Boeing' ? 'bg-[#E8F1F8] hover:bg-[#D1E5F0]' : 
+                result.type === 'Not Boeing' ? 'bg-green-100 hover:bg-green-200' : 
+                'bg-yellow-100 hover:bg-yellow-200'
+              }`}>
+                <div className="flex flex-col items-center justify-center space-y-4">
+                  <div className="flex items-center justify-center space-x-3">
+                    {result.type === 'Boeing' && (
                       <>
-                        <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                        Opening partner site...
-                      </>
-                    ) : partnerWebsiteOpened ? (
-                      <>
-                        <CheckCircle className="mr-2 h-6 w-6" />
-                        Partner site opened
-                      </>
-                    ) : (
-                      <>
-                        <ExternalLink className="mr-2 h-6 w-6" />
-                        Explore rebooking options
+                        <AlertCircle className="text-orange-500 h-8 w-8 flex-shrink-0 drop-shadow" />
+                        <span className="text-orange-700 text-2xl font-medium drop-shadow">This is a Boeing aircraft.</span>
                       </>
                     )}
-                  </Button>
+                    {result.type === 'Not Boeing' && (
+                      <>
+                        <CheckCircle className="text-green-500 h-8 w-8 flex-shrink-0 drop-shadow" />
+                        <span className="text-green-700 text-2xl font-medium drop-shadow">This is not a Boeing aircraft.</span>
+                      </>
+                    )}
+                    {result.type === 'Not Found' && (
+                      <>
+                        <AlertCircle className="text-yellow-500 h-8 w-8 flex-shrink-0 drop-shadow" />
+                        <span className="text-yellow-700 text-2xl font-medium drop-shadow">Flight not found.</span>
+                      </>
+                    )}
+                  </div>
+                  {result.aircraft && (
+                    <p className={`text-center text-lg ${
+                      result.type === 'Boeing' ? 'text-orange-600' : 'text-green-600'
+                    } drop-shadow`}>
+                      Aircraft assigned: {result.aircraft}
+                    </p>
+                  )}
+                  {result.type === 'Boeing' && (
+                    <p className="text-orange-700 text-lg text-center drop-shadow">
+                      You are flying on a Boeing aircraft. Be aware of recent safety concerns and consider exploring alternative options.
+                    </p>
+                  )}
+                  {result.type === 'Not Boeing' && (
+                    <p className="text-gray-600 text-lg text-center drop-shadow">
+                      Your flight is not on a Boeing aircraft. You can proceed with your travel plans as usual.
+                    </p>
+                  )}
+                  {result.type === 'Not Found' && (
+                    <p className="text-gray-700 text-lg text-center drop-shadow">
+                      If you don't have a flight booked, you can book a trip with our partner.
+                    </p>
+                  )}
+                  {(result.type === 'Boeing' || result.type === 'Not Found') && (
+                    <Button
+                      onClick={handleRebook}
+                      disabled={rebooking || partnerWebsiteOpened}
+                      className="w-full bg-gradient-to-r from-[#4C8CBF] to-[#8CC8E8] hover:from-[#3A6D94] hover:to-[#6BA5C8] text-white text-lg py-3 mt-4 rounded-xl transform transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
+                    >
+                      {rebooking ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Opening partner site...
+                        </>
+                      ) : partnerWebsiteOpened ? (
+                        <>
+                          <CheckCircle className="mr-2 h-5 w-5" />
+                          Partner site opened
+                        </>
+                      ) : (
+                        <>
+                          <ExternalLink className="mr-2 h-5 w-5" />
+                          {result.type === 'Boeing' ? 'Explore non-Boeing options' : 'Book a trip with our partner'}
+                        </>
+                      )}
+                    </Button>
+                  )}
                   {partnerWebsiteOpened && (
-                    <p className="text-gray-600 text-lg text-center">
+                    <p className="text-gray-600 text-sm text-center mt-2 drop-shadow">
                       Partner website opened in a new tab.
                     </p>
                   )}
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            ) : (
+              <div className="text-center text-gray-600 space-y-3 bg-white/50 p-6 rounded-xl shadow-inner">
+                <p className="text-xl font-semibold drop-shadow">How to use the Aircraft Checker:</p>
+                <ol className="list-decimal list-inside text-left space-y-1 text-sm">
+                  <li className="drop-shadow">Enter your flight number (e.g., AA1234) in the input field above, or click the random button to generate one.</li>
+                  <li className="drop-shadow">Click the "Check Flight" button to see if your flight is on a Boeing aircraft.</li>
+                  <li className="drop-shadow">If your flight is not found, you can book a trip with our partner.</li>
+                </ol>
+                <p className="text-xs italic mt-3 drop-shadow">Note: This tool is for informational purposes only. Always confirm details with your airline and make informed decisions about your travel plans.</p>
+              </div>
+            )}
+          </div>
         </CardContent>
+        <CardFooter className="text-center text-sm text-gray-500 py-3 bg-gray-100/50 rounded-b-xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-white/10"></div>
+          <div className="w-full flex items-center justify-center space-x-2 relative z-10">
+            <Info className="h-4 w-4" />
+            <span className="drop-shadow">Flight information is simulated for demonstration purposes.</span>
+          </div>
+        </CardFooter>
       </Card>
     </div>
   )
