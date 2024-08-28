@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
@@ -9,30 +9,38 @@ import { Loader2, CheckCircle, XCircle, Plane, ExternalLink, AlertCircle, Info, 
 interface FlightInfo {
   type: 'Boeing' | 'Not Boeing' | 'Not Found';
   aircraft?: string;
+  origin?: {
+    code: string;
+    airport: string;
+    city: string;
+  };
+  destination?: {
+    code: string;
+    airport: string;
+    city: string;
+  };
 }
 
-const checkFlight = (flightNumber: string): Promise<FlightInfo> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const random = Math.random()
-      if (random < 1/3) {
-        resolve({ type: 'Boeing', aircraft: ['Boeing 737 MAX', 'Boeing 787 Dreamliner', 'Boeing 777'][Math.floor(Math.random() * 3)] })
-      } else if (random < 2/3) {
-        resolve({ type: 'Not Boeing', aircraft: ['Airbus A320', 'Airbus A350', 'Embraer E175'][Math.floor(Math.random() * 3)] })
-      } else {
-        resolve({ type: 'Not Found' })
-      }
-    }, 200)
-  })
-}
-
-const simulateOpenPartnerWebsite = (): Promise<void> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 200)
-  })
-}
+const checkFlight = async (flightNumber: string): Promise<FlightInfo> => {
+  try {
+    const response = await fetch(`http://localhost:5001/flight_info?flight_number=${flightNumber}`);
+    if (!response.ok) {
+      throw new Error('Flight not found');
+    }
+    const data = await response.json();
+    const aircraftType = data.flight_info.aircraft.friendly_type;
+    
+    return {
+      type: aircraftType.toLowerCase().includes('boeing') ? 'Boeing' : 'Not Boeing',
+      aircraft: aircraftType,
+      origin: data.flight_info.origin,
+      destination: data.flight_info.destination,
+    };
+  } catch (error) {
+    console.error('Error fetching flight info:', error);
+    return { type: 'Not Found' };
+  }
+};
 
 const generateRandomFlightNumber = (): string => {
   const airlines = ['AA', 'UA', 'DL', 'WN', 'BA', 'LH', 'AF', 'KL', 'EK', 'QR']
@@ -68,7 +76,8 @@ export default function Component() {
     setRebooking(true)
     setPartnerWebsiteOpened(false)
     try {
-      await simulateOpenPartnerWebsite()
+      // Simulating opening a partner website
+      await new Promise(resolve => setTimeout(resolve, 1000))
       setPartnerWebsiteOpened(true)
     } catch (error) {
       console.error("An error occurred while opening partner website.")
@@ -159,6 +168,12 @@ export default function Component() {
                       Aircraft assigned: {result.aircraft}
                     </p>
                   )}
+                  {result.type !== 'Not Found' && result.origin && result.destination && (
+                    <div className="text-orange-600 text-lg text-center drop-shadow">
+                    <p>From: {result.origin.airport} ({result.origin.code})</p>
+                    <p>To: {result.destination.airport} ({result.destination.code})</p>
+                  </div>
+                  )}
                   {result.type === 'Boeing' && (
                     <p className="text-orange-700 text-lg text-center drop-shadow">
                       You are flying on a Boeing aircraft. Be aware of recent safety concerns and consider exploring alternative options.
@@ -176,7 +191,7 @@ export default function Component() {
                   )}
                   {(result.type === 'Boeing' || result.type === 'Not Found') && (
                     <Button
-                      onClick={handleRebook}
+                      onClick={() => window.open('https://skiplagged.com/', '_blank')}
                       disabled={rebooking || partnerWebsiteOpened}
                       className="w-full bg-gradient-to-r from-[#4C8CBF] to-[#8CC8E8] hover:from-[#3A6D94] hover:to-[#6BA5C8] text-white text-lg py-3 mt-4 rounded-xl transform transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
                     >
@@ -211,7 +226,7 @@ export default function Component() {
                 <ol className="list-decimal list-inside text-left space-y-1 text-sm">
                   <li className="drop-shadow">Enter your flight number (e.g., AA1234) in the input field above, or click the random button to generate one.</li>
                   <li className="drop-shadow">Click the "Check Flight" button to see if your flight is on a Boeing aircraft.</li>
-                  <li className="drop-shadow">If your flight is on a Boeing aircraft, you can change your flight with our partner.</li>
+                  <li className="drop-shadow">If your flight is on a Boeing aircraft, you can explore alternative options with our partner.</li>
                 </ol>
                 <p className="text-xs italic mt-3 drop-shadow">Note: This tool is for informational purposes only. Always confirm details with your airline and make informed decisions about your travel plans.</p>
               </div>
