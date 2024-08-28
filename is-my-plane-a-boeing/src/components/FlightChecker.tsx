@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
@@ -29,7 +29,7 @@ const checkFlight = async (flightNumber: string): Promise<FlightInfo> => {
     }
     const data = await response.json();
     const aircraftType = data.flight_info.aircraft.friendly_type;
-    
+
     return {
       type: aircraftType.toLowerCase().includes('boeing') ? 'Boeing' : 'Not Boeing',
       aircraft: aircraftType,
@@ -72,19 +72,25 @@ export default function Component() {
     }
   }
 
-  const handleRebook = async () => {
+  const handleRebook = useCallback(async () => {
     setRebooking(true)
     setPartnerWebsiteOpened(false)
     try {
-      // Simulating opening a partner website
+      // Open partner website in a new tab
+      window.open('https://skiplagged.com/', '_blank')
+      // Simulating a delay before updating the UI
       await new Promise(resolve => setTimeout(resolve, 1000))
       setPartnerWebsiteOpened(true)
+      // Reset the button state after 3 seconds
+      setTimeout(() => {
+        setPartnerWebsiteOpened(false)
+      }, 3000)
     } catch (error) {
       console.error("An error occurred while opening partner website.")
     } finally {
       setRebooking(false)
     }
-  }
+  }, [])
 
   const handleRandomFlight = () => {
     const randomFlight = generateRandomFlightNumber()
@@ -191,8 +197,8 @@ export default function Component() {
                   )}
                   {(result.type === 'Boeing' || result.type === 'Not Found') && (
                     <Button
-                      onClick={() => window.open('https://skiplagged.com/', '_blank')}
-                      disabled={rebooking || partnerWebsiteOpened}
+                      onClick={handleRebook}
+                      disabled={rebooking}
                       className="w-full bg-gradient-to-r from-[#4C8CBF] to-[#8CC8E8] hover:from-[#3A6D94] hover:to-[#6BA5C8] text-white text-lg py-3 mt-4 rounded-xl transform transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
                     >
                       {rebooking ? (
@@ -221,7 +227,7 @@ export default function Component() {
                 </div>
               </div>
             ) : (
-              <div className="text-center text-gray-600 space-y-3 bg-white/50 p-6 rounded-xl shadow-inner">
+              <div className="text-center text-gray-600 space-y-3 bg-white/50 p-6 rounded-xl shadow-inner shadow-gray-200">
                 <p className="text-xl font-semibold drop-shadow">How to use the Aircraft Checker:</p>
                 <ol className="list-decimal list-inside text-left space-y-1 text-sm">
                   <li className="drop-shadow">Enter your flight number (e.g., AA1234) in the input field above, or click the random button to generate one.</li>
