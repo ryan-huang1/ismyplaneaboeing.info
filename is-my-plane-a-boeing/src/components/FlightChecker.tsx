@@ -211,7 +211,7 @@ export default function Component() {
                 <ol className="list-decimal list-inside text-left space-y-1 text-sm">
                   <li className="drop-shadow">Enter your flight number (e.g., AA1234) in the input field above, or click the random button to generate one.</li>
                   <li className="drop-shadow">Click the "Check Flight" button to see if your flight is on a Boeing aircraft.</li>
-                  <li className="drop-shadow">If your flight is not found, you can book a trip with our partner.</li>
+                  <li className="drop-shadow">If your flight is on a Boeing aircraft, you can change your flight with our partner.</li>
                 </ol>
                 <p className="text-xs italic mt-3 drop-shadow">Note: This tool is for informational purposes only. Always confirm details with your airline and make informed decisions about your travel plans.</p>
               </div>
@@ -221,7 +221,7 @@ export default function Component() {
         <CardFooter className="text-center text-sm text-gray-500 py-3 bg-gray-100/50 rounded-b-xl">
           <div className="w-full flex items-center justify-center space-x-2">
             <Info className="h-4 w-4" />
-            <span className="drop-shadow">Flight information is simulated for demonstration purposes.</span>
+            <span className="drop-shadow">Always verify with your airline for the most up-to-date details.</span>
           </div>
         </CardFooter>
       </Card>
