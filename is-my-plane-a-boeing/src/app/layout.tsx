@@ -6,7 +6,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Boeing or Not",
-  description: "If its Boeing, I'm not going",
+  description: "If it's Boeing, I'm not going",
+  icons: {
+    icon: '/favicon.ico', // Add this line to include the favicon
+  },
 };
 
 export default function RootLayout({
