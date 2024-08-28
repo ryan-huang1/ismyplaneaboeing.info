@@ -198,7 +198,7 @@ export default function Component() {
                   )}
                   {result.type === 'Not Found' && (
                     <p className="text-gray-700 text-lg text-center drop-shadow">
-                      If you don't have a flight booked, you can book a trip with our partner.
+                      If you don&apos;t have a flight booked, you can book a trip with our partner.
                     </p>
                   )}
                   {(result.type === 'Boeing' || result.type === 'Not Found') && (
@@ -237,7 +237,7 @@ export default function Component() {
                 <p className="text-xl font-semibold drop-shadow">How to use the Aircraft Checker:</p>
                 <ol className="list-decimal list-inside text-left space-y-1 text-sm">
                   <li className="drop-shadow">Enter your flight number (e.g., AA1234) in the input field above, or click the random button to generate one.</li>
-                  <li className="drop-shadow">Click the "Check Flight" button to see if your flight is on a Boeing aircraft.</li>
+                  <li className="drop-shadow">Click the &quot;Check Flight&quot; button to see if your flight is on a Boeing aircraft.</li>
                   <li className="drop-shadow">If your flight is on a Boeing aircraft, you can explore alternative options with our partner.</li>
                 </ol>
                 <p className="text-xs italic mt-3 drop-shadow">Note: This tool is for informational purposes only. Always confirm details with your airline and make informed decisions about your travel plans.</p>
