@@ -43,10 +43,14 @@ const checkFlight = async (flightNumber: string): Promise<FlightInfo> => {
 };
 
 const generateRandomFlightNumber = (): string => {
-  const airlines = ['AA', 'UA', 'DL', 'WN', 'BA', 'LH', 'AF', 'KL', 'EK', 'QR']
-  const airline = airlines[Math.floor(Math.random() * airlines.length)]
-  const number = Math.floor(Math.random() * 9000) + 1000
-  return `${airline}${number}`
+  const flightNumbers = [
+    'SWA1030', 'UAL2644', 'UAL435', 'AAL302', 'SWA2594', 'SWA2594',
+    'DAL321', 'DAL2870', 'WJA1536', 'AAL742', 'DLH463',
+    'AUA66', 'KLM672', 'BAW216', 'VIR46K', 'WPT1158', 'BAW2238',
+    'AFR406', 'ETH734', 'PBD5922', 'VIR300', 'PIA248',
+    'UAE1KM', 'QTR40P'
+  ]
+  return flightNumbers[Math.floor(Math.random() * flightNumbers.length)]
 }
 
 export default function Component() {
@@ -175,10 +179,12 @@ export default function Component() {
                     </p>
                   )}
                   {result.type !== 'Not Found' && result.origin && result.destination && (
-                    <div className="text-orange-600 text-lg text-center drop-shadow">
-                    <p>From: {result.origin.airport} ({result.origin.code})</p>
-                    <p>To: {result.destination.airport} ({result.destination.code})</p>
-                  </div>
+                    <div className={`text-lg text-center drop-shadow ${
+                      result.type === 'Boeing' ? 'text-orange-600' : 'text-green-600'
+                    }`}>
+                      <p>From: {result.origin.airport} ({result.origin.code})</p>
+                      <p>To: {result.destination.airport} ({result.destination.code})</p>
+                    </div>
                   )}
                   {result.type === 'Boeing' && (
                     <p className="text-orange-700 text-lg text-center drop-shadow">
