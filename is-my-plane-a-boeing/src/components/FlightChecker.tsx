@@ -84,18 +84,17 @@ export default function Component() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#B1D4E5] to-[#E8F1F8] p-4">
-      <Card className="w-full max-w-2xl mx-auto h-[560px] flex flex-col bg-white/90 backdrop-blur-sm border-2 border-white rounded-2xl shadow-[0_10px_20px_rgba(0,0,0,0.1)] transform perspective-1000 hover:rotate-y-1 transition-all duration-300 hover:shadow-[0_20px_30px_rgba(0,0,0,0.2)]">
-        <CardHeader className="text-center py-4 bg-gradient-to-r from-[#4C8CBF] to-[#8CC8E8] text-white rounded-t-xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-white/10"></div>
-          <CardTitle className="text-3xl font-bold flex items-center justify-center gap-3 mb-2 relative z-10">
+      <Card className="w-full max-w-2xl mx-auto flex flex-col bg-white/90 backdrop-blur-sm border-2 border-white rounded-2xl shadow-[0_10px_20px_rgba(0,0,0,0.1)] transform perspective-1000 hover:rotate-y-1 transition-all duration-300 hover:shadow-[0_20px_30px_rgba(0,0,0,0.2)]">
+        <CardHeader className="text-center py-4 bg-gradient-to-r from-[#4C8CBF] to-[#8CC8E8] text-white rounded-t-xl">
+          <CardTitle className="text-3xl font-bold flex items-center justify-center gap-3 mb-2">
             <Plane className="h-10 w-10 text-white transform -rotate-45 drop-shadow-md" />
             Boeing Flight or Not?
           </CardTitle>
-          <CardDescription className="text-lg text-white relative z-10 drop-shadow">
+          <CardDescription className="text-lg text-white drop-shadow">
             Check if your flight is on a Boeing airplane
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex-grow flex flex-col justify-center space-y-6 p-6 overflow-y-auto">
+        <CardContent className="flex-grow flex flex-col space-y-6 p-6 overflow-y-auto">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <div className="flex-grow flex space-x-2">
@@ -125,7 +124,7 @@ export default function Component() {
               </Button>
             </div>
           </form>
-          <div className="flex-grow flex items-center justify-center">
+          <div className="flex-grow">
             {result ? (
               <div className={`w-full p-6 rounded-xl shadow-lg transform transition-all duration-300 ${
                 result.type === 'Boeing' ? 'bg-[#E8F1F8] hover:bg-[#D1E5F0]' : 
@@ -219,9 +218,8 @@ export default function Component() {
             )}
           </div>
         </CardContent>
-        <CardFooter className="text-center text-sm text-gray-500 py-3 bg-gray-100/50 rounded-b-xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-white/10"></div>
-          <div className="w-full flex items-center justify-center space-x-2 relative z-10">
+        <CardFooter className="text-center text-sm text-gray-500 py-3 bg-gray-100/50 rounded-b-xl">
+          <div className="w-full flex items-center justify-center space-x-2">
             <Info className="h-4 w-4" />
             <span className="drop-shadow">Flight information is simulated for demonstration purposes.</span>
           </div>
