@@ -8,7 +8,7 @@ const PrivacyPolicy: React.FC = () => {
         <p>Last updated: 2024-08-29</p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-4">1. Introduction</h2>
-        <p>Welcome to Is My Plane a Boeing ("we," "our," or "us"). We are committed to protecting your personal data and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website ismyplaneaboeing.info or use our services.</p>
+        <p>Welcome to Is My Plane a Boeing (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). We are committed to protecting your personal data and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website ismyplaneaboeing.info or use our services.</p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-4">2. Information We Collect</h2>
         <p>We collect information that you provide directly to us when you use our services:</p>
@@ -51,7 +51,7 @@ const PrivacyPolicy: React.FC = () => {
         <h2 className="text-2xl font-semibold mt-6 mb-4">7. Analytics</h2>
         <p>We may use third-party Service Providers to monitor and analyze the use of our Service.</p>
         <p>Google Analytics is a web analytics service offered by Google that tracks and reports website traffic. Google uses the data collected to track and monitor the use of our Service. This data is shared with other Google services. Google may use the collected data to contextualize and personalize the ads of its own advertising network.</p>
-        <p>For more information on the privacy practices of Google, please visit the Google Privacy & Terms web page: https://policies.google.com/privacy</p>
+        <p>For more information on the privacy practices of Google, please visit the Google Privacy &amp; Terms web page: https://policies.google.com/privacy</p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-4">8. Changes to This Privacy Policy</h2>
         <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
